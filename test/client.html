@@ -1,0 +1,60 @@
+<!doctype html>
+<script src="../flowthings-browser.js"></script>
+<script>
+  var api, client, path, count = 1;
+  function connect() {
+    var status = document.getElementById('status');
+    var publish = document.getElementById('publish');
+    var log = document.getElementById('log');
+    var account = document.getElementById('account').value;
+    var token = document.getElementById('token').value;
+    path = document.getElementById('path').value;
+    api = flowthings.API({ account: account, token: token });
+    api.ws.connect(function(err, res) {
+      status.innerHTML = err ? 'Connection Error' : 'Connected';
+    });
+    api.ws.subscribe(path, handler, function(err, res) {
+      status.innerHTML = err ? 'Subscription Error' : 'Subscribed';
+      publish.disabled = false;
+    });
+    function handler(drop) {
+      log.innerHTML += '<pre>' + JSON.stringify(drop) + '</pre>';
+    }
+  }
+  function publish() {
+    api.drop.create({
+      path: path,
+      elems: {
+        test: count++
+      }
+    });
+  }
+</script>
+<div ng-app="app" ng-controller="MainCtrl">
+  <table>
+    <tr>
+      <th>Account</th>
+      <td><input type="text" id="account"></td>
+    </tr>
+    <tr>
+      <th>Token</th>
+      <td><input type="text" id="token"></td>
+    </tr>
+    <tr>
+      <th>Path</th>
+      <td><input type="text" id="path"></td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>
+        <button onclick="connect()">Connect</button>
+        <span id="status"></span>
+      </td>
+    </tr>
+    <tr>
+      <th></th>
+      <td><button onclick="publish()" disabled id="publish">Publish</button></td>
+    </tr>
+  </table>
+  <div id="log"></div>
+</div>
