@@ -1,6 +1,18 @@
 flowthings-browser-client
 =========================
 
+## Install
+
+NPM
+```
+npm install flowthings-browser
+```
+
+Bower
+```
+bower install flowthings-browser
+```
+
 ## Example
 
 ```js
