@@ -75,7 +75,7 @@ void function(root, factory) {
       ws: WebSocketClient(options, request, Socket),
       flow: Service(_request, '/flow', [FindableMixin]),
       drop: extend(
-        ServiceFactory(_request, '/drop', [FindableMixin, UpdateableMixin]),
+        ServiceFactory(_request, '/drop', [FindableMixin, UpdateableMixin, AggregateMixin]),
         Service(_request, '/drop', [CreateableMixin]))
     };
   }
@@ -367,6 +367,19 @@ void function(root, factory) {
       update: update,
       save: save
     });
+  }
+
+  function AggregateMixin(request, path) {
+    function aggregate(data, params, callback) {
+      if (isFunction(params)) {
+        callback = params;
+        params = null;
+      }
+      return request({ method: 'POST', path: path + '/aggregate', data: data, params: params }, callback);
+    }
+    return {
+      aggregate: aggregate
+    };
   }
 
   function Service(request, path, mixins) {

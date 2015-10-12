@@ -99,6 +99,19 @@ Overloaded save method, dispatched on first argument.
 
 Overloaded find method, dispatched on first argument.
 
+### api.drop(flowId).aggregate(spec[, params], callback)
+
+Aggregation spec options:
+
+*   `filter`
+*   `groupBy`
+*   `rules`
+*   `output`
+*   `sorts`
+
+Please visit the [flowthings.io aggregation documentation](https://flowthings.io/docs/flow-drop-aggregate)
+for more details on how to use these options.
+
 ## Promises
 
 Anything that takes a callback can return a `Promise` instead by using the
