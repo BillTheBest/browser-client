@@ -68,7 +68,7 @@ void function(root, factory) {
       };
       return options.transform(function(_callback) {
         return request(opts, _callback);
-      }, callback);
+      }, callback || noop);
     }
     return {
       request: _request,
@@ -124,7 +124,7 @@ void function(root, factory) {
           client.__socket = conn;
           return _callback(null, client);
         });
-      }, callback);
+      }, callback || noop);
     }
     function onopen() {
       connected = true;
@@ -174,7 +174,7 @@ void function(root, factory) {
           if (sub.pending) {
             sub.pending = sub.pending.concat({
               handler: handler,
-              callback: _callback || function(){}
+              callback: _callback
             });
           } else {
             sub.handlers.push(handler);
@@ -186,12 +186,12 @@ void function(root, factory) {
             handlers: [],
             pending: [{
               handler: handler,
-              callback: _callback || function(){}
+              callback: _callback
             }],
           };
           _send(mkAction('drop', 'subscribe', path), resolve);
         }
-      }, callback);
+      }, callback || noop);
     }
     function unsubscribe(path, handler, callback) {
       return options.transform(function(_callback) {
@@ -217,7 +217,7 @@ void function(root, factory) {
             _callback(null, {});
           }
         }
-      }, callback);
+      }, callback || noop);
     }
     function flush() {
       while (queue.length) {
@@ -243,7 +243,7 @@ void function(root, factory) {
     function send(msg, callback) {
       return options.transform(function(_callback) {
         _send(msg, _callback);
-      }, callback);
+      }, callback || noop);
     }
     function receive(str) {
       var msg = options.serializer.parse(str);
@@ -610,4 +610,6 @@ void function(root, factory) {
       }
     }
   }
+
+  function noop() {}
 });
